@@ -1,0 +1,23 @@
+"""
+# Definition for a Node.
+class Node(object):
+	def __init__(self, val: Optional[int] = None, children: Optional[List['Node']] = None):
+        self.val = val
+        self.children = children
+"""
+
+class Solution(object):
+    def postorder(self, root):
+        res = []
+        def dfs(node):
+            if not node:
+                return
+            if not node.children:
+                res.append(node.val)
+                return
+            for child in node.children:
+                dfs(child)
+            res.append(node.val)
+        dfs(root)
+        return res
+        
