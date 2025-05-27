@@ -1,17 +1,14 @@
-class Solution(object):
-    def minimumRecolors(self, blocks, k):
-        left, right, recolors = 0, 0, 0
-        min_recolors = k
-        while right < len(blocks):
-            if blocks[right] == "W":
-                recolors += 1            
-            if right - left + 1 == k:
-                min_recolors = min(min_recolors, recolors)
-                if blocks[left] == "W":
-                    recolors -= 1
-                left += 1
-            
-            right += 1
-        return min_recolors
-            
+class Solution:
+    def minimumRecolors(self, blocks: str, k: int) -> int:
+        l = 0
+        minimum, current = len(blocks), 0
+        for r in range(len(blocks)):
+            if blocks[r] == "W":
+                current += 1
+            if r - l + 1 == k:
+                minimum = min(minimum, current)
+                current -= 1 if blocks[l] == "W" else 0
+                l += 1
+        
+        return minimum
             
