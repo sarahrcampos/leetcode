@@ -1,10 +1,13 @@
-class Solution(object):
-    def majorityElement(self, nums):
-        map = {}
-        for element in nums:
-            map[element] = 1 if element not in map else map[element] + 1
-        for key, value in map.items():
-            if value > len(nums)//2:
-                return key
-        return -1
-        
+class Solution:
+    def majorityElement(self, nums: List[int]) -> int:
+        current = nums[0]
+        total = 1
+        for i in range(1,len(nums)):
+            if nums[i] != current:
+                total -= 1
+            else:
+                total += 1
+            if not total:
+                current = nums[i]
+                total = 1
+        return current
