@@ -1,11 +1,8 @@
-class Solution(object):
-    #Time: O(n)
-    #Space: O(n)
-    def containsDuplicate(self, nums):
-        seen = set()
+class Solution:
+    def containsDuplicate(self, nums: List[int]) -> bool:
+        elements = set()
         for n in nums:
-            if n in seen:
+            if n in elements:
                 return True
-            seen.add(n)
+            elements.add(n)
         return False
-        
