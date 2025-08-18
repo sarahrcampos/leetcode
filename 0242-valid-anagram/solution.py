@@ -1,17 +1,12 @@
-class Solution(object):
-    #Time: O(n+m)
-    #Space: O(n)
-    def isAnagram(self, s, t):
-        map = {}
+class Solution:
+    def isAnagram(self, s: str, t: str) -> bool:
+        if len(s) != len(t): return False
+        freqMap = defaultdict(int)
         for c in s:
-            map[c] = 1 + map.get(c, 0)
+            freqMap[c] += 1
         for c in t:
-            if c not in map:
+            if c not in freqMap or freqMap[c] == 0:
                 return False
-            map[c] -= 1
-            if map[c] == 0:
-                del map[c]
-        return len(map) == 0
+            freqMap[c] -= 1
         
-        
-        
+        return True
