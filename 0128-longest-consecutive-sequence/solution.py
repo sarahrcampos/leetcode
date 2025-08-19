@@ -1,20 +1,28 @@
 class Solution:
     def longestConsecutive(self, nums: List[int]) -> int:
-        nums_set = set(nums)
-        max_length = 0
-        while nums_set:
-            total = 0
-            queue = deque()
-            queue.append(nums_set.pop())
-            while queue:
-                current = queue.popleft()
-                total += 1
-                if current-1 in nums_set:
-                    queue.append(current-1)
-                    nums_set.remove(current-1)
-                if current+1 in nums_set:
-                    queue.append(current+1)
-                    nums_set.remove(current+1)
-            max_length = max(max_length, total)
+        map = { n: i for i, n in enumerate(nums) }
+        cache = {}
+        lcs = 0
+        
+        def sequence(n):
+            if n not in map:
+                return 0
+            if n in cache:
+                return cache[n]
+            cache[n] = 1 + sequence(n+1)
+            return cache[n]
+        
+        for n in nums:
+            if n in cache:
+                continue
+            lcs = max(lcs, sequence(n))
+        
+        return lcs
+            
+#100,4,200,1,3,2,5,6
+#sequence = 1
+#cache[100] = 1
+#lcs = 1
+#cache[4] = 3
 
-        return max_length
+
