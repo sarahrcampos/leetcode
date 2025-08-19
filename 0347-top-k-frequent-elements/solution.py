@@ -1,15 +1,18 @@
 class Solution:
-    #Time: O(nlogk)
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
-        map = defaultdict(int)
-        for num in nums:
-            map[num] += 1
-        minHeap = []
-        for num, count in map.items():
-            heapq.heappush(minHeap, (count, num))
-            if len(minHeap) > k:
-                heapq.heappop(minHeap)
+        #bucket sort -> O(n)
+        count = defaultdict(int)
+        freq = [[] for _ in range(len(nums) + 1)]
+
+        for n in nums:
+            count[n] += 1
+        for n, c in count.items():
+            freq[c].append(n)
+        
         res = []
-        for count, num in minHeap:
-            res.append(num)
+        for i in range(len(freq)-1,0,-1):
+            for num in freq[i]:
+                res.append(num)
+                if len(res) == k:
+                    return res
         return res
