@@ -1,20 +1,18 @@
 class Solution(object):
     def isValid(self, s):
-        mapOpen = {
-            "{": "}",
-            "[": "]",
-            "(": ")"
+        pairs = {
+            '{': '}',
+            '[': ']',
+            '(': ')'
         }
         stack = []
-
-        for c in s:
-            if c in mapOpen:
-                stack.append(c)
-            else:
-                if(len(stack) <= 0): 
-                    return False
-                last = stack.pop()
-                if(mapOpen[last] != c):
-                    return False
-        return len(stack) == 0
-        
+        for parentheses in s:
+            if parentheses in pairs:
+                stack.append(parentheses)
+                continue
+            if not stack:
+                return False
+            opened = stack.pop()
+            if pairs[opened] != parentheses:
+                return False
+        return not stack
