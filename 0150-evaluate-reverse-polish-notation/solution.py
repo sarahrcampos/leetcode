@@ -1,21 +1,27 @@
 class Solution:
     def evalRPN(self, tokens: List[str]) -> int:
-        stack = []
+        if len(tokens) == 1:
+            return int(tokens[0])
 
-        for token in tokens:
-            if token == "+":
-                stack.append(stack.pop() + stack.pop())
-            elif token == "-":
-                first = stack.pop()
-                second = stack.pop()
-                stack.append(second - first)
-            elif token == "*":
-                stack.append(stack.pop() * stack.pop())
-            elif token == "/":
-                first = stack.pop()
-                second = stack.pop()
-                stack.append(int(second / first))
-            else:
-                stack.append(int(token))
-        
-        return stack[-1]
+        stack = []
+        operators = {
+            '+': lambda a,b : a+b,
+            '-': lambda a,b : a-b,
+            '*': lambda a,b : a*b,
+            '/': lambda a,b : int(a/b)
+        }
+        for i in range(len(tokens)-1, -1, -1):
+            token = tokens[i]
+            if token in operators or (stack and stack[-1] in operators):
+                stack.append(token)
+                continue
+            operandA = int(token)
+            while stack and stack[-1] not in operators:
+                operandB = int(stack.pop())
+                operator = stack.pop()
+                operandA = operators[operator](operandA, operandB)
+            stack.append(operandA)
+            
+        return stack[0]
+
+
