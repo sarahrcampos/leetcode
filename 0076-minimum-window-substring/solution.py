@@ -1,24 +1,38 @@
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        mapT = defaultdict(int)
+        countT = defaultdict(int)
         for c in t:
-            mapT[c] += 1
+            countT[c] += 1
         
-        l = 0
-        mapS = defaultdict(int)
-        minSubstring = s
-        curSubstring, curT = "", ""
-        for r in range(len(s)):
-            mapS[s[r]] += 1
-            curSubstring += s[r]
-            if mapS[s[r]] <= mapT[s[r]]:
-                curT += s[r]
+        left,right = 0,0
+        countWindow = defaultdict(int)
+        minLength = float("inf")
+        minL, minR = 0, 0        
+        window = set()
 
-            while l < len(s) and mapS[s[l]] > mapT[s[l]]:
-                curSubstring = curSubstring[1:]
-                mapS[s[l]] -= 1
-                l += 1
+        while right < len(s):
+            if s[right] in countT:
+                countWindow[s[right]] += 1
+                if countWindow[s[right]] == countT[s[right]]:
+                    window.add(s[right])
 
-            if len(curT) >= len(t) and len(curSubstring) < len(minSubstring):
-                    minSubstring = curSubstring
-        return minSubstring if len(curT) == len(t) else ""
+            while left < right and (s[left] not in countT or countWindow[s[left]] > countT[s[left]]):
+                if s[left] in countT:
+                    countWindow[s[left]] -= 1
+                left += 1
+            
+            if len(window) == len(countT): #ja tenho tds os caracteres necessarios
+                if right - left + 1 < minLength:
+                    minLength = right - left + 1
+                    minL = left
+                    minR = right
+            right = right + 1
+            
+
+        return "" if minLength == float("inf") else s[minL:minR+1]
+
+#                   L     R
+#"TTTADOBBEACODEBANCBACTTTT", t = "ABC"
+#countT = { A: 1, B: 1, C: 1}
+#window = A,B,C
+#minLength = 4, minL = 7, minR = 10
