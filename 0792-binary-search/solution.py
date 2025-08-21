@@ -1,9 +1,12 @@
-class Solution(object):
-    def search(self, nums, target):
-        start, end = 0, len(nums) - 1
-        while(start <= end):
-            i = int((start+end)/2)
-            if(nums[i] == target): return i
-            if(nums[i] > target): end = i-1
-            else: start = i+1
+class Solution:
+    def search(self, nums: List[int], target: int) -> int:
+        l, r = 0, len(nums) - 1
+        while l <= r:
+            m = (r+l)//2
+            if nums[m] < target:
+                l = m + 1
+            elif nums[m] > target:
+                r = m - 1
+            else:
+                return m
         return -1
