@@ -1,28 +1,29 @@
-class Solution(object):
-    def searchMatrix(self, matrix, target):
-        #analisar a linha
+class Solution:
+    def searchMatrix(self, matrix: List[List[int]], target: int) -> bool:
         ROWS, COLS = len(matrix), len(matrix[0])
-        s, e = 0, ROWS - 1
-        while s <= e:
-            i = (s + e)//2
-            if target > matrix[i][-1]:
-                s = i + 1
-            elif target < matrix[i][0]:
-                e = i - 1
+        top, bottom = 0, ROWS - 1
+        left, right = 0, COLS - 1
+
+        row = -1
+        while top <= bottom:
+            m = (top+bottom) // 2
+            if target < matrix[m][0]:
+                bottom = m - 1
+            elif target > matrix[m][COLS-1]:
+                top = m + 1
             else:
+                row = m
                 break
-        if s > e:
+        if row == -1:
             return False
-        i = (s + e)//2
-        s, e = 0, COLS - 1        
-        #to na linha certa, agr vou ver as colunas... abraços
-        while(s <= e):
-            j = (s + e)//2
-            if(target == matrix[i][j]):
-                return True
-            elif(target > matrix[i][j]):
-                s = j + 1
+
+        while left <= right:
+            col = (right + left) // 2
+            if target < matrix[row][col]:
+                right = col - 1
+            elif target > matrix[row][col]:
+                left = col + 1
             else:
-                e = j - 1
+                return True
+
         return False
-        
