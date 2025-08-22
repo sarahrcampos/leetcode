@@ -1,58 +1,59 @@
 class Node:
-    def __init__(self, key, val=-1, next=None, prev=None):
-        self.key = key
-        self.value = val
+    def __init__(self, val=0, next=None, prev=None, key=None):
+        self.val = val
         self.next = next
         self.prev = prev
+        self.key = key
 
 class LRUCache:
 
     def __init__(self, capacity: int):
         self.capacity = capacity
-        self.cache = {}
         self.head = self.tail = None
+        self.mapList = {}
 
-    def remove(self, node):
-        next = node.next
-        if node.prev: node.prev.next = node.next
-        if node.next: node.next.prev = node.prev
-        if node == self.head:
-            self.head = next
-            
     def get(self, key: int) -> int:
-        if key not in self.cache:
+        if key not in self.mapList:
             return -1
-        node = self.cache[key]
-        if node != self.tail:
-            self.remove(node)
-            self.append(node)
-            
-        return node.value
+        
+        node = self.mapList[key]
+        if node == self.tail:
+            return node.val
+        
+        self.moveNodeToTail(node)
+
+        return node.val
     
-    def append(self, node):
-        self.tail.next = node
-        node.prev = self.tail
+
+    def moveNodeToTail(self, node):
+        if node == self.tail:
+            return
+        if node == self.head:
+            self.head = self.head.next
+        if node.prev:
+            node.prev.next = node.next
+        if node.next:
+            node.next.prev = node.prev
+
         node.next = None
+        node.prev = self.tail   
+        if self.tail:     
+            self.tail.next = node
         self.tail = node
 
-    def put(self, key: int, value: int) -> None:
-        newNode = Node(key) if key not in self.cache else self.cache[key]
-        newNode.value = value
-        if not self.head:
-            self.head = self.tail = newNode
-        elif newNode != self.tail: #Otherwise, add the key-value pair to the cache
-            if key in self.cache: #Update the value of the key if the key exists
-                self.remove(newNode)
-            self.append(newNode)
-        self.cache[key] = newNode
 
-        #If the number of keys exceeds the capacity from this operation, evict the least recently used key
-        if len(self.cache) > self.capacity:
-            newHead = self.head.next if self.head.next else newNode
-            newHead.prev = None
-            del self.cache[self.head.key]
-            self.head = newHead
-        
+    def put(self, key: int, value: int) -> None:
+        node = self.mapList[key] if key in self.mapList else Node(key=key)
+        node.val = value
+        self.mapList[key] = node
+
+        self.moveNodeToTail(node)
+        if not self.head:
+            self.head = node  
+
+        if len(self.mapList) > self.capacity: #evict the least recently used key
+            del self.mapList[self.head.key]
+            self.head = self.head.next
 
 # Your LRUCache object will be instantiated and called as such:
 # obj = LRUCache(capacity)
