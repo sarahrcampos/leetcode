@@ -6,54 +6,26 @@ class Node:
         self.next = next
         self.random = random
 """
-#can we have cycles in this linked list?
 
-#                              o
-# 7 -> 13 -> 11 -> 10 -> 1 -> null
-
-#dummy
-# 0 -> 7 -> 13 -> 11 -> 10 -> 1 -> null
-#                             c
-
-#map
-#o7: n7
-#o13: n13
-#o11: n11
-#o10: n10
-#o1: n1
 class Solution:
-    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
+    def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':        
+        if not head:
+            return None
+        mapNodes = {}
         dummy = Node(0)
-        map = {}
         
-        original, current = head, dummy
-        while original:
-            newNode = Node(original.val)
-            current.next = newNode
-            map[original] = newNode #mapping original to the new node
-            original = original.next 
-            current = current.next
+        newHead = dummy
+        curr = head
+        while curr:
+            newHead.next = Node(curr.val)
+            newHead = newHead.next
+            mapNodes[curr] = newHead
+            curr = curr.next
+            
+        curr = head
+        while curr:
+            mapNodes[curr].random = mapNodes[curr.random] if curr.random in mapNodes else None
+            curr = curr.next
 
-        current.next = None
-
-        original = head
-        while original:
-            map[original].random = map[original.random] if original.random else None
-            original = original.next
-        
         return dummy.next
-
-
-#                               o                              
-# 7 -> 13 -> 11 -> 10 -> 1 -> null
-
-#       dummy
-#       0 -> 7 -> 13 -> 11 -> 10 -> 1 -> null
-#random     null  n7     n1   n11   n7
-
-#map
-#o7: n7
-#o13: n13
-#o11: n11
-#o10: n10
-#o1: n1
+        
