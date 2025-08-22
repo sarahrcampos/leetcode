@@ -4,18 +4,20 @@
 #         self.val = val
 #         self.next = next
 class Solution:
-    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]: 
-        sz, i = 0, 0
-        map = {}
-        current = head
-        while current:
-            map[i] = current
-            current = current.next
-            sz += 1
+    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:
+        mapList = {}
+        curr = head
+        i = 0
+        while curr:
+            mapList[i] = curr
+            curr = curr.next
             i += 1
-        if sz - n == 0:
+        
+        length = len(mapList)  
+        i = length-n      
+        if i == 0:
             return head.next
         
-        map[sz-n-1].next = map[sz-n].next
+        mapList[i-1].next = mapList[i+1] if i+1<length else None
 
         return head
