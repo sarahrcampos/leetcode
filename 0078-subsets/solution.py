@@ -1,13 +1,21 @@
-class Solution(object):
-    #Time: O(2^n)
-    def subsets(self, nums):
-        result = []
-        def dfs(i, subset):
+class Solution:
+    def subsets(self, nums: List[int]) -> List[List[int]]:
+        res = []
+
+        def dfs(i, curr):
             if i == len(nums):
-                result.append(subset)
+                res.append(curr.copy())
                 return
-            dfs(i+1, subset) #don't choose the number
-            dfs(i+1, subset + [nums[i]]) #choose the number
-        dfs(0, [])
-        return result
+            
+            #nao adicionar
+            dfs(i+1, curr)
+
+            #adicionar
+            curr.append(nums[i])
+            dfs(i+1, curr)
+            curr.pop()
         
+        dfs(0, [])
+
+        return res
+
