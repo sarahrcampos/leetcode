@@ -1,27 +1,22 @@
-# for each i we have two decisions: use i or not
-# []           [1]
-#[]  [2]    [1] [1,2]
-#[] [2] -> oh no we got a duplicate
-class Solution(object):
-    def subsetsWithDup(self, nums):
-        nums.sort() #O(nlogn)
-        result = []
-        def backtrack(i, combination):
-            if i >= len(nums):
-                result.append(combination[::])
+class Solution:
+    def subsetsWithDup(self, nums: List[int]) -> List[List[int]]:
+        nums.sort()
+        res = []
+
+        def backtrack(i, curr):
+            if i == len(nums):
+                res.append(curr.copy())
                 return
             
-            #use i
-            combination.append(nums[i])
-            backtrack(i+1, combination)
+            #usar i
+            curr.append(nums[i])
+            backtrack(i + 1, curr)
+            curr.pop()
 
-            #do not use i
-            current = combination.pop()
-            #or it's cousins
-            while i < len(nums) and nums[i] == current:
+            #não usar i nem seus irmãos gêmeos
+            while i + 1 < len(nums) and nums[i] == nums[i+1]:
                 i += 1
-            backtrack(i, combination)
-
-        backtrack(0, [])
-        return result
+            backtrack(i + 1 , curr)
         
+        backtrack(0,[])
+        return res
