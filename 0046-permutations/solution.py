@@ -1,18 +1,20 @@
-class Solution(object):
-    def permute(self, nums):
-        SIZE_NUMS = len(nums)
-        result = []
-        used = set()
-        def dfs(permutation, size_permutation):
-            if size_permutation == SIZE_NUMS:
-                result.append(permutation[::])
-            for n in nums:
-                if n not in used:
-                    permutation.append(n)
-                    used.add(n)
-                    dfs(permutation, size_permutation+1)
-                    permutation.pop()
-                    used.remove(n)
-        dfs([], 0)
-        return result
-        
+class Solution:
+    def permute(self, nums: List[int]) -> List[List[int]]:
+        res = []
+
+        def backtrack(start):
+            # se já permutamos todos
+            if start == len(nums):
+                res.append(nums[:])  # faz cópia da permutação atual
+                return
+
+            for i in range(start, len(nums)):
+                # troca o elemento atual com o candidato
+                nums[start], nums[i] = nums[i], nums[start]
+                backtrack(start + 1)
+                # desfaz a troca (backtracking)
+                nums[start], nums[i] = nums[i], nums[start]
+
+        backtrack(0)
+        return res
+
