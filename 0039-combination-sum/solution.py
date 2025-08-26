@@ -1,21 +1,24 @@
-class Solution(object):
-    def combinationSum(self, candidates, target):
-        result = []
-        memo = {}
-        def dfs(soma, combination, frequency):
-            if soma == target:
-                result.append(combination)
+class Solution:
+    def combinationSum(self, candidates: List[int], target: int) -> List[List[int]]:
+        res = []
+
+        def dfs(i, curr, currSum):
+            if currSum > target or i >= len(candidates):
                 return
-            if soma > target:
+            if currSum == target:
+                res.append(curr.copy())
                 return
-            for i in range(len(candidates)):
-                if candidates[i] <= target:
-                    frequency[i] += 1
-                    if tuple(frequency) not in memo:
-                        dfs(soma+candidates[i], combination + [candidates[i]], frequency)
-                        memo[tuple(frequency)] = True
-                    frequency[i] -= 1
-        
-        dfs(0,[], [0]*len(candidates))
-        return result
-        
+            
+            #não usar i
+            dfs(i+1, curr, currSum)
+
+            #usar i
+            curr.append(candidates[i])
+
+            #usar i de novo
+            dfs(i, curr, currSum + candidates[i])
+
+            curr.pop()
+
+        dfs(0, [], 0)
+        return res
