@@ -1,31 +1,28 @@
-class Solution(object):
-    def letterCombinations(self, digits):
-        letters = {
-            "2": [97,99],
-            "3": [100,102],
-            "4": [103,105],
-            "5": [106,108],
-            "6": [109,111],
-            "7": [112,115],
-            "8": [116,118],
-            "9": [119,122]
+class Solution:
+    def letterCombinations(self, digits: str) -> List[str]:
+        mapD2L = {
+            '2': ['a', 'b', 'c'],
+            '3': ['d', 'e', 'f'],
+            '4': ['g','h','i'],
+            '5': ['j','k', 'l'],
+            '6': ['m','n','o'],
+            '7': ['p','q','r','s'],
+            '8': ['t','u','v'],
+            '9': ['w','x','y','z']
         }
+
         res = []
+        curr = []
 
-        def backtrack(i, current):
-            if len(current) == len(digits):
-                res.append("".join(current))
-                return
+        def backtrack(i):
             if i == len(digits):
+                if i > 0:
+                    res.append("".join(curr))
                 return
-            for letter in range(letters[digits[i]][0], letters[digits[i]][1]+1):
-                current.append(str(unichr(letter)))
-                backtrack(i+1,current)
-                current.pop()
-
-        if digits:
-            backtrack(0,[])
-
-
-        return res
+            for letter in mapD2L[digits[i]]:
+                curr.append(letter)
+                backtrack(i+1)
+                curr.pop()
         
+        backtrack(0)
+        return res
