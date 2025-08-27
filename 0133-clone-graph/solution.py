@@ -1,28 +1,24 @@
 """
 # Definition for a Node.
-class Node(object):
+class Node:
     def __init__(self, val = 0, neighbors = None):
         self.val = val
         self.neighbors = neighbors if neighbors is not None else []
 """
 
-class Solution(object):
-    def cloneGraph(self, node):
-        visited = {}
-
-        def dfs(current):
-            if not current:
+from typing import Optional
+class Solution:
+    def cloneGraph(self, node: Optional['Node']) -> Optional['Node']:
+        mapOld2New = {}
+        def dfs(old):
+            if not old:
                 return None
-            if current.val in visited:
-                return visited[current.val]
+            if old in mapOld2New:
+                return mapOld2New[old]
+            mapOld2New[old] = Node(old.val)
+            for neighbor in old.neighbors:
+                mapOld2New[old].neighbors.append(dfs(neighbor))          
+            return mapOld2New[old]
 
-            newNode = Node(current.val)
-            visited[current.val] = newNode
-            for n in current.neighbors:
-                newNode.neighbors.append(dfs(n))
-            return newNode
-        
+
         return dfs(node)
-
-        
-        
