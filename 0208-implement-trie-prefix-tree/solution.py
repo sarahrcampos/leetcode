@@ -1,34 +1,29 @@
-class Trie(object):
-
+class Trie:
     def __init__(self):
-        self.root = {}
+        self.hashmap = {}
 
-    def insert(self, word):
-        current = self.root
-        for c in word:
-            if c not in current:
-                current[c] = {}
-            current = current[c]
-        current["."] = {}               
-        
-
-    def search(self, word):
-        current = self.root
-        for c in word:
-            if not c in current:
+    def insert(self, word: str) -> None:
+        hashmap = self.hashmap
+        for i in range(len(word)):
+            if word[i] not in hashmap:
+                hashmap[word[i]] = {}
+            hashmap = hashmap[word[i]]
+        hashmap["."] = "." #end of word
+    def search(self, word: str) -> bool:
+        hashmap = self.hashmap
+        for i in range(len(word)):
+            if word[i] not in hashmap:
                 return False
-            current = current[c]
-        return "." in current
-        
+            hashmap = hashmap[word[i]]
+        return "." in hashmap
 
-    def startsWith(self, prefix):
-        current = self.root
-        for c in prefix:
-            if not c in current:
+    def startsWith(self, prefix: str) -> bool:
+        hashmap = self.hashmap
+        for i in range(len(prefix)):
+            if prefix[i] not in hashmap:
                 return False
-            current = current[c]
+            hashmap = hashmap[prefix[i]]
         return True
-        
 
 
 # Your Trie object will be instantiated and called as such:
