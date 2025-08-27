@@ -1,25 +1,29 @@
 class Solution:
-    #Time: O(n²)
-    #Space: O(n)
     def threeSum(self, nums: List[int]) -> List[List[int]]:
-        res = []
-        count = defaultdict(int)
-        for num in nums:
-            count[num] += 1
-        for i in range(len(nums)):
-            if count[nums[i]] == 0:
-                continue
-            count[nums[i]] -= 1
-            localCount = count.copy()
-            for j in range(len(nums)):
-                if i == j or localCount[nums[j]] <= 0:
-                    continue
-                localCount[nums[j]] -= 1
-                target = -(nums[i] + nums[j])
-                if target in localCount and localCount[target] > 0:
-                    localCount[target] = 0
-                    res.append([nums[i], nums[j], target])
-            count[nums[i]] = 0
-        return res
+        nums.sort() #nlogn
+        def twoSum(start, end, target):
+            res = []
+            l, r = start, end
+            while l < r:
+                if nums[l] + nums[r] == target:
+                    res.append([-target, nums[l], nums[r]])
+                    l = l + 1
+                    while nums[l] == nums[l-1] and l < r:
+                        l += 1
+                elif nums[l] + nums[r] > target:
+                    r -= 1
+                else:
+                    l += 1
+            return res
+
+        answer = []
+        i = 0
+        while i < len(nums):
+            answer += twoSum(i+1, len(nums)-1, -nums[i])
+            i += 1
+            while i < len(nums) and nums[i] == nums[i-1]:
+                i += 1        
+        return answer
 
 
+#[-4, -3, -2, -1, -1, 0, 0, 1, 2, 3, 4]
