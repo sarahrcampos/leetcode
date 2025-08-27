@@ -1,27 +1,23 @@
-class Solution(object):
-    def maxAreaOfIsland(self, grid):
+class Solution:
+    def maxAreaOfIsland(self, grid: List[List[int]]) -> int:
         ROWS, COLS = len(grid), len(grid[0])
-        maxArea = 0
-
-        def bfs(i, j):
-            directions = [[1,0],[-1,0],[0,1],[0,-1]]
-            area = 0
-            queue = deque()
-            queue.append([i,j])
-            while queue:
-                cur_i, cur_j = queue.popleft()
-                grid[cur_i][cur_j] = -1
-                area += 1
-                for di,dj in directions:
-                    i, j = cur_i+di, cur_j+dj
-                    if i >= 0 and i < ROWS and j >= 0 and j < COLS and grid[i][j] == 1:
-                        queue.append([i,j])
-                        grid[i][j] = -1
+        directions = [[0,1],[0,-1],[-1,0],[1,0]]
+        def dfs(i, j):
+            if (i < 0 or i >= ROWS or
+                j < 0 or j >= COLS or
+                grid[i][j] != 1):
+                return 0
+            grid[i][j] = -1
+            area = 1
+            for di, dj in directions:
+                newI, newJ = i + di, j + dj
+                area += dfs(newI, newJ)            
             return area
-        
+
+        maxArea = 0
         for i in range(ROWS):
             for j in range(COLS):
                 if grid[i][j] == 1:
-                    maxArea = max(maxArea, bfs(i,j))
-        
+                    maxArea = max(maxArea, dfs(i,j))
+
         return maxArea
