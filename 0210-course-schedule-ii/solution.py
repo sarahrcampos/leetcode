@@ -1,36 +1,31 @@
 class Solution:
     def findOrder(self, numCourses: int, prerequisites: List[List[int]]) -> List[int]:
-        dependsOf = defaultdict(list)
+        graph = defaultdict(list)
         for a, b in prerequisites:
-            dependsOf[a].append(b)
-        
-        visited = set()
-        visiting = set()
+            graph[a].append(b) #a depende de b
         res = []
-        def dfs(course):
-            if course in visiting:
+        
+        visited = {}
+        def dfs(node):
+            if node in visited and visited[node] == 1: #msm path -> ciclo
                 return False
-            if course in visited:
+            if node in visited and visited[node] == 2:
                 return True
-            if course not in dependsOf:
-                visited.add(course)
-                res.append(course)
+            if not graph[node]:
+                visited[node] = 2
+                res.append(node)
                 return True
             
-            
-            visiting.add(course)
-            for courseB in dependsOf[course]:
-                if not dfs(courseB):
+            visited[node] = 1
+            for neighbor in graph[node]:
+                if not dfs(neighbor):
                     return False
-            visiting.remove(course)
-            visited.add(course)
-            res.append(course)
+            visited[node] = 2
+            res.append(node)
             return True
         
-        for i in range(numCourses):
-            if i in visited: continue
-            if not dfs(i):
+        for n in range(numCourses):
+            if not dfs(n):
                 return []
         
         return res
-
