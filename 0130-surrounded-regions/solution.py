@@ -1,35 +1,29 @@
-class Solution(object):
-    def solve(self, board):
+class Solution:
+    def solve(self, board: List[List[str]]) -> None:
         ROWS, COLS = len(board), len(board[0])
         directions = [[0,1],[0,-1],[1,0],[-1,0]]
-        edge = set()
-
-        def bfs(i, j):
-            queue = deque()
-            queue.append((i,j))
-            edge.add((i,j))
-            while queue:
-                i, j = queue.popleft()
-                for di, dj in directions:
-                    newi, newj = i+di, j+dj
-                    if newi>=0 and newi<ROWS and newj>=0 and newj<COLS and board[newi][newj] == "O" and (newi,newj) not in edge:
-                        edge.add((newi,newj))
-                        queue.append((newi,newj))        
-
+        #mark edges
+        def dfs(i, j):
+            if (i < 0 or i >= ROWS or
+                j < 0 or j >= COLS or
+                board[i][j] != "O"):
+                return
+            board[i][j] = "Z"
+            for di, dj in directions:
+                newI, newJ = i + di, j + dj
+                dfs(newI, newJ)
         for i in range(ROWS):
-            if board[i][0] == "O":
-                bfs(i, 0)
-            if board[i][COLS-1] == "O":
-                bfs(i, COLS-1)
-        
+            dfs(i, 0)
+            dfs(i, COLS-1)
         for j in range(COLS):
-            if board[0][j] == "O":
-                bfs(0,j)
-            if board[ROWS-1][j] == "O":
-                bfs(ROWS-1, j)
+            dfs(0, j)
+            dfs(ROWS-1, j)
         
-        for i in range(1,ROWS-1):
-            for j in range(1, COLS-1):
-                if board[i][j] == "O" and (i,j) not in edge:
+        #capture remaining
+        for i in range(ROWS):
+            for j in range(COLS):
+                if board[i][j] == "O":
                     board[i][j] = "X"
+                elif board[i][j] == "Z": #remark edges
+                    board[i][j] = "O"
         
