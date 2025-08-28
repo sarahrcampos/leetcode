@@ -1,34 +1,27 @@
+#prerequisites[i] = [a,b] => a depende de b
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
-        dependsOf = defaultdict(list)
+        graph = defaultdict(list)
         for a, b in prerequisites:
-            dependsOf[a].append(b)
+            graph[a].append(b)
         
-        visited = set()
-        cache = {}
-        def dfs(a):
-            if a in visited:
+        visited = {}
+        def dfs(node):
+            if node in visited and visited[node] == 1: #visitado no mesmo path -> ciclo
                 return False
-            if a in cache:
-                return cache[a]
-            if a not in dependsOf:
+            if node in visited and visited[node] == 2:
                 return True
-            
-
-            res = True
-            visited.add(a)
-            for b in dependsOf[a]:
-                res &= dfs(b)
-            visited.remove(a)
-            cache[a] = res
-            return res
+            if node not in graph:
+                return True
+            visited[node] = 1
+            for neighbor in graph[node]:
+                if not dfs(neighbor):
+                    return False
+            visited[node] = 2
+            return True
         
-        for course in dependsOf:
-            if not dfs(course):
+        for n in range(numCourses):
+            if not dfs(n):
                 return False
         
         return True
-
-        
-        
-
