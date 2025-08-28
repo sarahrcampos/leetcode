@@ -1,19 +1,23 @@
+#times[i] = (ui, vi, wi)
+#dijkstra
 class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         graph = defaultdict(list)
         for u, v, w in times:
-            graph[u].append((w, v))
-        
-        #minimum time - dijkstra
-        #to reach ALL the nodes - maximum from the shortest hashmap
-        shortest = {}
-        heap = [(0, k)] #k is the start point
-        while heap:
-            weight, node = heapq.heappop(heap)
-            if node in shortest:
+            graph[u].append([v,w])
+
+        visited = set()
+        minHeap = [[0, k]]
+        time = -1
+        while minHeap:
+            w, node = heapq.heappop(minHeap)
+            if node in visited:
                 continue
-            shortest[node] = weight
-            for weight_neighbor, neighbor in graph[node]:
-                if neighbor not in shortest:
-                    heapq.heappush(heap, (weight + weight_neighbor, neighbor))
-        return -1 if len(shortest) != n else max(shortest.values())
+            visited.add(node)
+            time = w
+            for node2, w2 in graph[node]:
+                if node2 not in visited:
+                    heapq.heappush(minHeap, [w + w2, node2])
+        print(visited)
+        return time if len(visited) == n else -1
+
