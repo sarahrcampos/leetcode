@@ -1,20 +1,21 @@
 class Solution:
     def swimInWater(self, grid: List[List[int]]) -> int:
-        n = len(grid)
-        heap = [(grid[0][0], 0, 0)] #cost, i, j
-        visited = set()
-        t = 0
-        directions = [[0,-1],[0,1],[-1,0],[1,0]]
-        while heap:
-            cost, i, j = heapq.heappop(heap)
-            t = max(t, cost)
-            if i == n-1 and j == n-1:
-                return t
-            visited.add((i,j))
+        ROWS, COLS = len(grid), len(grid[0])
+        time = max(grid[ROWS-1][COLS-1], grid[0][0]) #tempo mínimo pra chegar no destino saindo de 0,0
+
+        minHeap = [[time, 0, 0]]
+        visited = set([(0, 0)])
+        directions = [[0,1],[0,-1],[1,0],[-1,0]]
+        while minHeap:
+            time, i, j = heapq.heappop(minHeap)
+            if i == ROWS-1 and j == COLS-1:
+                return time
             for di, dj in directions:
-                newi, newj = i+di, j+dj
-                if newi in range(0,n) and newj in range(0,n) and (newi, newj) not in visited:
-                    newcost = max(cost, grid[newi][newj])
-                    heapq.heappush(heap, (newcost, newi, newj))
-                    visited.add((newi,newj))
-        return t
+                newI, newJ = i+di, j+dj
+                if (0<=newI<ROWS and 0<=newJ<COLS and (newI, newJ) not in visited):
+                    visited.add((newI, newJ))
+                    heapq.heappush(minHeap, [max(time, grid[newI][newJ]), newI, newJ])
+        return time
+
+
+
