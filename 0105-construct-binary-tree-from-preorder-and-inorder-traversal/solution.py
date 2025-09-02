@@ -5,25 +5,26 @@
 #         self.left = left
 #         self.right = right
 class Solution:
-    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        #preorder: root - left - right
-        #inorder: left - root - right
-        root = TreeNode(preorder[0])
-        map = {n:i for i,n in enumerate(inorder)}
+    #inorder = left root right
+    #preorder = root left right
 
-        def dfs(current, newNode):
-            if not current:
-                return TreeNode(newNode)
-            if map[newNode] < map[current.val]:
-                current.left = dfs(current.left, newNode)
-            else:
-                current.right = dfs(current.right, newNode)
-            return current
-        for i in range(1, len(preorder)):
-            node = preorder[i]
-            dfs(root, node)
+#preorder = [3,9,20,15,7]
+#inorder = [9,3,15,20,7]
+
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        if not preorder or not inorder:
+            return None            
+        root = TreeNode(preorder[0])
+        inOrderIndex = inorder.index(root.val)
         
+        root.left = self.buildTree(
+            preorder[1 : inOrderIndex + 1],
+            inorder[ : inOrderIndex]        
+        )
+
+        root.right = self.buildTree(
+            preorder[inOrderIndex + 1 : ],
+            inorder[inOrderIndex + 1 : ]
+        )
         return root
 
-
-            
