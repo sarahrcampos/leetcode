@@ -1,19 +1,12 @@
 class Solution:
+    #max(nums[i-1], nums[i] + nums[i-2])
     def rob(self, nums: List[int]) -> int:
-        cache = {}
-        if len(nums) == 1:
+        n = len(nums)
+        if n == 1:
             return nums[0]
 
-        def dfs(i, current):
-            if i in cache:
-                return cache[i]
-            if i >= len(nums):
-                return 0
-
-            notSteal = dfs(i+1, current)
-            steal = dfs(i+2, current) + nums[i]
-            cache[i] = max(notSteal, steal)
-            return cache[i]
-        dfs(0, 0)
-        return max(cache[0], cache[1])
-            
+        for i in range(1, n):
+            calc = nums[i] + (nums[i - 2] if i - 2 >= 0 else 0)
+            nums[i] = max(nums[i-1], calc)
+        
+        return nums[-1]
