@@ -1,25 +1,22 @@
 class Solution:
-    #Time: O(nlogn)
-    #Space: O(n)
     def partitionLabels(self, s: str) -> List[int]:
-        letters = {}
-        #marcar primeira e última aparição de cada letra
+        rangeSeen = {}
         for i in range(len(s)):
-            if s[i] not in letters:
-                letters[s[i]] = [i, i]
+            c = s[i]
+            if c not in rangeSeen:
+                rangeSeen[c] = [i, i]
             else:
-                letters[s[i]][1] = i
-        #merge overlapping intervals
-        aux = list(letters.values())
-        aux.sort()
-        current = aux[0]
-        res = []
-        for i in range(1, len(aux)): 
-            if current[1] < aux[i][0]:
-                res.append(current[1] - current[0] + 1)
-                current = aux[i]
-            else:
-                current[1] = max(current[1], aux[i][1])
-        res.append(current[1] - current[0] + 1)
-        return res
-                
+                rangeSeen[c][1] = i #0 = firstSeen, 1 = lastSeen
+        curBegin = curEnd = 0
+        ranges = [0]
+        for c in s:
+            firstSeen, lastSeen = rangeSeen[c]
+            #print(ranges)
+            if firstSeen > curEnd:                
+                curBegin, curEnd = firstSeen, lastSeen
+                ranges.append(curEnd - curBegin + 1)
+                continue
+            curEnd = max(lastSeen, curEnd)
+            ranges[-1] = curEnd - curBegin + 1
+            #print(curBegin, curEnd)
+        return ranges
