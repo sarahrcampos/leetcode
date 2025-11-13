@@ -1,22 +1,40 @@
 class DetectSquares:
 
     def __init__(self):
-        self.pts = defaultdict(int)
+        self.points = defaultdict(lambda: defaultdict(int))
 
     def add(self, point: List[int]) -> None:
-        self.pts[tuple(point)] += 1
+        x, y = point
+        self.points[x][y] += 1        
 
     def count(self, point: List[int]) -> int:
-        res = 0
-        px, py = point
-        print('New')
-        for x, y in self.pts:
-            if (abs(px - x) != abs(py - y)) or x == px or y == py:
+        qx, qy = point
+        if qx not in self.points:
+            return 0
+        
+        squares = 0
+        
+        for py, pcounter in self.points[qx].items():
+            if py == qy:
                 continue
-            if (px, y) in self.pts and (x, py) in self.pts:
-                # Multiply with the number of occurrences of the repeated point represented by self.pts[(x, y)]
-                res += self.pts[(px, y)] * self.pts[(x, py)] * self.pts[(x, y)]
-        return res
+            length = abs(qy - py)
+
+            #outros possíveis pontos:
+            #(qx - length, qy)            
+            #(qx - length, py)
+            #ou
+            #(qx + length, qy)
+            #(qx + length, py)
+
+            left = qx - length
+            squares += pcounter * self.points[left][qy] * self.points[left][py]
+
+            right = qx + length
+            squares += pcounter * self.points[right][qy] * self.points[right][py]
+        return squares
+            
+            
+
         
 
 
