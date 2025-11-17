@@ -5,27 +5,31 @@
 #         self.left = left
 #         self.right = right
 class Solution:
+    def getSuccessor(self, node):
+        curr = node.right
+        while curr and curr.left:
+            curr = curr.left
+        return curr
+    
     def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
-        def minValue(node):
-            while node and node.left:
-                node = node.left
-            return node.val
+        if not root:
+            return root
         
-        def remove(node, key):
-            if not node:
-                return node
-            if key > node.val:
-                node.right = remove(node.right, key)
-            elif key < node.val:
-                node.left = remove(node.left, key)
-            else:
-                if not node.left:
-                    return node.right
-                elif not node.right:
-                    return node.left
-                node.val = minValue(node.right)
-                node.right = remove(node.right, node.val)
+        if root.val > key:
+            root.left = self.deleteNode(root.left, key)
+        elif root.val < key:
+            root.right = self.deleteNode(root.right, key)
+        else:
+            if not root.left:
+                return root.right
+            if not root.right:
+                return root.left
+            successor = self.getSuccessor(root)
+            root.val = successor.val
+            root.right = self.deleteNode(root.right, successor.val)
+        
+        return root
+        
 
-            return node
-        
-        return remove(root, key)
+
+
