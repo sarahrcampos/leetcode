@@ -22,7 +22,7 @@
 <div class="example-block">
 <p><strong>Input:</strong> <span class="example-io">nums = [1,2,1,2,1,2,3,1,3,2], k = 2</span></p>
 
-<p><strong>Output:</strong> <span class="example-io">[-1]</span></p>
+<p><strong>Output:</strong> <span class="example-io">[1,2]</span></p>
 </div>
 
 <p>&nbsp;</p>
