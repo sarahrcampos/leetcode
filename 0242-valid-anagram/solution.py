@@ -1,12 +1,13 @@
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        if len(s) != len(t): return False
-        freqMap = defaultdict(int)
+        frequency = defaultdict(int)
         for c in s:
-            freqMap[c] += 1
+            frequency[c] += 1
         for c in t:
-            if c not in freqMap or freqMap[c] == 0:
+            frequency[c] -= 1
+            if frequency[c] < 0:
                 return False
-            freqMap[c] -= 1
+            if frequency[c] == 0:
+                del frequency[c]
         
-        return True
+        return len(frequency) == 0
