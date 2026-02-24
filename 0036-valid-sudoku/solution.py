@@ -1,19 +1,27 @@
+#subboxes
+#i: 0-2         i: 0-2         i: 0-2       -> i//3 = 0
+#j: 0-2         j: 3-5         j:6-8
+
+#i: 3-5         i: 3-5         i: 3-5       -> i//3 = 1
+#j: 0-2         j: 3-5         j:6-8
+
+#i: 6-8         i: 6-8         i: 6-8       -> i//3 = 2
+#j: 0-2         j: 3-5         j:6-8
+
 class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
-        row, col = defaultdict(set), defaultdict(set)
-        subbox = [[None] * 3 for i in range(3)]
-        #print(subbox)
-        for i in range(len(board)):
-            for j in range(len(board[0])):
-                if board[i][j] == ".": 
+        cols = [[False] * 10 for _ in range(9)]
+        subbox = [[[False] * 10 for _ in range(3)] for _ in range(3)]
+        for i in range(0,9):
+            row = set()
+            for j in range(0,9):
+                num = board[i][j]
+                if num == ".":
                     continue
-                if board[i][j] in row[i] or board[i][j] in col[j] or (subbox[i//3][j//3] and board[i][j] in subbox[i//3][j//3]):
-                    print(subbox)
+                if num in row or cols[j][int(num)] or subbox[i//3][j//3][int(num)]:
                     return False
-                row[i].add(board[i][j])
-                col[j].add(board[i][j])
-                if not subbox[i//3][j//3]:
-                    subbox[i//3][j//3] = set()
-                subbox[i//3][j//3].add(board[i][j])
-
+                row.add(num)
+                cols[j][int(num)] = True
+                subbox[i//3][j//3][int(num)] = True
         return True
+            
